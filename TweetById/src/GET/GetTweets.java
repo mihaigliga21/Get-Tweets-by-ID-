@@ -11,10 +11,10 @@ import twitter4j.conf.ConfigurationBuilder;
 public class GetTweets {
 	
 	//Application Settings
-	private static String consumerKey = "R4dICN9z1B9wAl9JiVne2yMtD";
-	private static String consumerSecret = "HwbZCGrAonAyEkNbMyeQPqsNoqweuj4F7I5goXu79CDl9CKmqV";
-	private static String accessToken = "519873273-3iustnJC2PDGDig2s5mbOkqXFleovAu39DavPyai";
-	private static String accessTokenSecret = "KlNLofYvRuiOCbJUvXPRX95feSqGehfF61CMmcYwfkQlE";
+	private static String consumerKey = "your consumerKey";
+	private static String consumerSecret = "your consumerSecret";
+	private static String accessToken = "your accessToken";
+	private static String accessTokenSecret = "your accessTokenSecret";
 
 	public static void main(String[] args) throws IOException {
 	    
@@ -29,34 +29,37 @@ public class GetTweets {
 	    //Instantiate 
 	    Twitter twitter = new TwitterFactory(cb.build()).getInstance();
 	    
-	    	// Open the files
-			try{
-			    FileInputStream fstream = new FileInputStream("input.txt");
-			    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-			    
-			    FileWriter fwriter = new FileWriter("output.txt", false);
-				BufferedWriter bw = new BufferedWriter(fwriter);
-				
-			    String strLine;
+	    		// Open the files
+				try{
+				    FileInputStream fstream = new FileInputStream("input.txt");
+				    BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
-				  //Read File Line By Line
-				  while ((strLine = br.readLine()) != null)   {
-					  try {
-				            Status status = twitter.showStatus(Long.parseLong(strLine));
-				            					 
-				            System.out.println("Tweet has been written into output file!!!");
-				            bw.write("");
-				            bw.write(status.getText() + "\n");
-				            /*
-				             * System.out.println(status.getText());
-				             */
-				     
-				        } catch (NumberFormatException e) {
-				            e.printStackTrace();
-				        } catch (TwitterException e) {				            
-				        	System.out.println("Error retrieving this tweet :(");
-				        }					   					  
-					  }
+				    FileWriter fwriter = new FileWriter("output.txt", false);
+					BufferedWriter bw = new BufferedWriter(fwriter);
+					
+				    String strLine;
+
+					  //Read File Line By Line
+					  while ((strLine = br.readLine()) != null)   {
+						  try {
+							  Status statusList = twitter.showStatus(Long.parseLong(strLine));
+							  
+							  //long id = statusList.getId();
+         					  String tw = statusList.getText();
+         					  
+         						  System.out.println("Tweet has been written into output file!!!");
+         						  for (int i=0; i<TwitterResponse.READ; i++) {								   								  
+         							  bw.write("");								  
+         							  bw.write(cleanText(tw)+"\n");	
+         						  }							  							  								
+  
+					        } catch (NumberFormatException e) {
+					            e.printStackTrace();
+					        } catch (TwitterException e) {				            
+					        	System.out.println("Error retrieving this tweet :(");
+					        	bw.write("This tweet has not been found!!" +"\n");
+					        }					   					  
+						  }
 				  //close files
 				  br.close();
 				  bw.close();
